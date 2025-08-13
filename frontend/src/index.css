@@ -1,6 +1,15 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+
+
+
+@layer base {
+  body {
+    font-family: "Poppins", sans-serif;
+  }
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
