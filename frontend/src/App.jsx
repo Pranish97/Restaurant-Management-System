@@ -13,10 +13,17 @@ import PageNotFound from "./pages/not-found";
 import AdminDashboard from "./pages/admin/dashboard";
 import UserPage from "./pages/admin/user";
 import CheckAuth from "./components/common/checkAuth";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { checkAuth } from "./store/auth-slice";
 
 function App() {
-  const isAuthenticated = false
+  const {isAuthenticated} = useSelector(state => state.auth)
+  const dispatch = useDispatch()
 
+  useEffect(() =>{
+    dispatch(checkAuth())
+  },[dispatch])
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
