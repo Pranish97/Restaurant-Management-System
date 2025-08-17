@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const authRouter = require("./routes/auth");
+const adminMenuRouter = require("./routes/admin/menu-routes");
 
 mongoose
   .connect("mongodb+srv://pranishstha4:Pranish123@rms.otc8usw.mongodb.net/")
@@ -30,5 +31,6 @@ app.use(
 app.use(cookieParser());
 app.use(express.json());
 app.use("/api/auth", authRouter);
+app.use("/api/admin/menu", adminMenuRouter);
 
 app.listen(PORT, () => console.log("Server Is Running"));
