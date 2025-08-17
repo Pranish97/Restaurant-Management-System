@@ -68,3 +68,39 @@ export const loginFormControls = [
     type: "password",
   },
 ];
+
+export const addMenuElement = [
+  {
+    name: "name",
+    label: "Name",
+    placeholder: "Enter Dish Name",
+    componentType: "input",
+    type: "text",
+  },
+  {
+    name: "price",
+    label: "Price",
+    placeholder: "Enter Dish Price",
+    componentType: "input",
+    type: "number",
+  },
+  {
+    name: "description",
+    label: "Description",
+    placeholder: "Enter Dish Description",
+    componentType: "textarea",
+  },
+  {
+    name: "category",
+    label: "Category",
+    placeholder: "Select Category",
+    componentType: "select",
+    options: [
+      { id: "burger", label: "Burger" },
+      { id: "pizza", label: "Pizza" },
+      { id: "drinks", label: "Drinks" },
+      { id: "bakery", label: "Bakery" },
+      { id: "momo", label: "Momo" },
+    ],
+  },
+];

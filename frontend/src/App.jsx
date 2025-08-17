@@ -3,10 +3,7 @@ import AuthLayout from "./components/auth/layout";
 import Login from "./pages/auth/login";
 import Register from "./pages/auth/register";
 import AdminLayout from "./components/admin/layout";
-import AdminFoodPage from "./pages/admin/food";
 import AdminMenuPage from "./pages/admin/menu";
-import AdminOrderPage from "./pages/admin/Order";
-import AdminReservationPage from "./pages/admin/reservation";
 import AdminTablePage from "./pages/admin/table";
 import AdminStaffPage from "./pages/admin/staff";
 import PageNotFound from "./pages/not-found";
@@ -18,12 +15,16 @@ import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
 
 function App() {
-  const {isAuthenticated} = useSelector(state => state.auth)
+  const {isAuthenticated, isLoading} = useSelector(state => state.auth)
   const dispatch = useDispatch()
 
   useEffect(() =>{
     dispatch(checkAuth())
   },[dispatch])
+
+
+  if(isLoading) return <div>Loading...</div>
+
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
@@ -43,10 +44,7 @@ function App() {
         }>
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="user" element={<UserPage />} />
-          <Route path="food" element={<AdminFoodPage />} />
           <Route path="menu" element={<AdminMenuPage />} />
-          <Route path="order" element={<AdminOrderPage />} />
-          <Route path="reservation" element={<AdminReservationPage />} />
           <Route path="table" element={<AdminTablePage />} />
           <Route path="staff" element={<AdminStaffPage />} />
         </Route>
