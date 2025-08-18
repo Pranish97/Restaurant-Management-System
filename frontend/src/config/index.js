@@ -1,3 +1,12 @@
+import {
+  Cake,
+  CupSoda,
+  Drumstick,
+  LayoutGrid,
+  Pizza,
+  Sandwich,
+} from "lucide-react";
+
 export const registerFormControls = [
   {
     name: "firstName",
@@ -102,5 +111,38 @@ export const addMenuElement = [
       { id: "bakery", label: "Bakery" },
       { id: "momo", label: "Momo" },
     ],
+  },
+];
+
+export const categories = [
+  {
+    id: "all",
+    label: "All Menu",
+    icon: LayoutGrid,
+  },
+  {
+    id: "burger",
+    label: "Burger",
+    icon: Sandwich,
+  },
+  {
+    id: "pizza",
+    label: "Pizza",
+    icon: Pizza,
+  },
+  {
+    id: "drinks",
+    label: "Drinks",
+    icon: CupSoda,
+  },
+  {
+    id: "bakery",
+    label: "Bakery",
+    icon: Cake,
+  },
+  {
+    id: "momo",
+    label: "Momo",
+    icon: Drumstick,
   },
 ];

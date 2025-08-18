@@ -51,7 +51,7 @@ const addMenu = async (req, res) => {
 
 const editMenu = async (req, res) => {
   try {
-    const { id } = req.params();
+    const { id } = req.params;
 
     const { image, name, price, description, category } = req.body;
 
@@ -87,15 +87,22 @@ const editMenu = async (req, res) => {
   }
 };
 
-const fetchAllMenu = async (req, res) => {
+const fetchMenuByCategory = async (req, res) => {
   try {
-    const allMenu = await menuModel.find();
+    const { category } = req.query;
+
+    let query = {};
+    if (category && category !== "all") {
+      query.category = category;
+    }
+
+    const menu = await menuModel.find(query);
 
     res.status(200).json({
-      data: allMenu,
-      message: "All Menu",
+      data: menu,
+      message: "Menu fetched successfully",
       success: true,
-      error: "false",
+      error: false,
     });
   } catch (error) {
     res.status(400).json({
@@ -116,7 +123,7 @@ const deleteMenu = async (req, res) => {
       return res.status(404).json({
         message: "Menu Not Found",
         success: false,
-        errortrue,
+        error: true,
       });
 
     res.status(200).json({
@@ -137,6 +144,6 @@ module.exports = {
   handleImageUpload,
   addMenu,
   editMenu,
-  fetchAllMenu,
+  fetchMenuByCategory,
   deleteMenu,
 };
