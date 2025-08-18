@@ -11,6 +11,7 @@ function MenuImageUpolad({
   uploadedImageUrl,
   setUploadedImageUrl,
   setImageLoadingState,
+  currentEditedId
 }) {
   const inputRef = useRef(null);
 
@@ -63,7 +64,7 @@ function MenuImageUpolad({
       <div
         onDragOver={handleDragOver}
         onDrop={handleDrop}
-        className="border-2 border-dashed rounded-lg p-4"
+        className={`${currentEditedId ? "opacity-25" : ""} border-2 border-dashed rounded-lg p-4`}
       >
         <Input
           ref={inputRef}
@@ -71,11 +72,12 @@ function MenuImageUpolad({
           id="image-upload"
           type="file"
           className="hidden"
+          disabled={currentEditedId}
         />
         {!imageFile ? (
           <Label
             htmlFor="image-upload"
-            className="flex flex-col items-center justify-center h-32 cursor-pointer"
+            className={`${currentEditedId ? 'cursor-not-allowed' : ''}flex flex-col items-center justify-center h-32 cursor-pointer`}
           >
             <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
             <span>Drag & Drop or Click to Upload Image</span>

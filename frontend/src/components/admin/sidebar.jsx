@@ -20,7 +20,7 @@ const adminSideBarMenu = [
   {
     id: "menu",
     label: "Menu",
-    path: "/admin/menu",
+    path: "/admin/menu/all",
     icon: <ClipboardPenLine />,
   },
   {
