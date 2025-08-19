@@ -61,7 +61,7 @@ const editMenu = async (req, res) => {
       return res.status(404).json({
         message: "Menu Not Found",
         success: false,
-        errortrue,
+        error: true,
       });
 
     findMenu.name = name || findMenu.name;
