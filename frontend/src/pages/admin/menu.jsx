@@ -45,24 +45,30 @@ function AdminMenuPage() {
 
   const dispatch = useDispatch();
   const { menuList } = useSelector((state) => state.adminMenu);
+  const { user } = useSelector((state) => state.auth);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryFromUrl = searchParams.get("category") || "all";
 
+
   function onSubmit(e) {
     e.preventDefault();
 
+    if (user?.role !== "admin") {
+      toast.error("You don't have access");
+      return;
+    }
+
     currentEditedId !== null
-      ? dispatch(editMenu({ id: currentEditedId, formData })).then((data) =>{
-          if(data.payload.success){
-            toast.success(data.payload.message)
+      ? dispatch(editMenu({ id: currentEditedId, formData })).then((data) => {
+          if (data.payload.success) {
+            toast.success(data.payload.message);
             dispatch(fetchMenuByCategory(categoryFromUrl));
-            setOpenAddMenu(false)
-            setCurrentEditedId(null)
-            setFormData(initialData)
-          }  
-        }
-        )
+            setOpenAddMenu(false);
+            setCurrentEditedId(null);
+            setFormData(initialData);
+          }
+        })
       : dispatch(
           addNewMenu({
             ...formData,
@@ -80,13 +86,25 @@ function AdminMenuPage() {
   }
 
   function handleDeleteMenu(id) {
-    console.log(id);
+    if(user?.role !== "admin"){
+      toast.error("You don't have access");
+      return;
+    }
     dispatch(deleteMenu(id)).then((data) => {
       if (data.payload.success) {
         dispatch(fetchMenuByCategory(categoryFromUrl));
         toast.success(data.payload.message);
       }
     });
+  }
+
+  function handleOpenAddDialog() {
+    if (user?.role !== "admin") {
+      toast.error("You don't have access");
+      return;
+    } else {
+      setOpenAddMenu(true);
+    }
   }
 
   useEffect(() => {
@@ -142,7 +160,7 @@ function AdminMenuPage() {
               {categoryFromUrl} Menu
             </h2>
             <Button
-              onClick={() => setOpenAddMenu(true)}
+              onClick={handleOpenAddDialog}
               className="cursor-pointer bg-amber-700 hover:bg-amber-600"
             >
               Add New Menu
@@ -180,7 +198,7 @@ function AdminMenuPage() {
                 <CardFooter className="flex justify-between gap-3">
                   <Button
                     onClick={() => {
-                      setOpenAddMenu(true);
+                      handleOpenAddDialog();
                       setCurrentEditedId(item?._id);
                       setFormData(item);
                     }}

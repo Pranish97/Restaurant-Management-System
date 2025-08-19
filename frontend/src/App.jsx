@@ -15,33 +15,39 @@ import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
 
 function App() {
-  const {isAuthenticated, isLoading} = useSelector(state => state.auth)
-  const dispatch = useDispatch()
+  const { isAuthenticated, isLoading ,user} = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
-  useEffect(() =>{
-    dispatch(checkAuth())
-  },[dispatch])
+  useEffect(() => {
+    dispatch(checkAuth());
+  }, []);
 
 
-  if(isLoading) return <div>Loading...</div>
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">
       <Routes>
-        <Route path="/auth" element={
-          <CheckAuth isAuthenticated={isAuthenticated}>
-            <AuthLayout />
-          </CheckAuth>
-        }>
+        <Route
+          path="/auth"
+          element={
+            <CheckAuth isAuthenticated={isAuthenticated}>
+              <AuthLayout />
+            </CheckAuth>
+          }
+        >
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
         </Route>
 
-        <Route path="/admin" element={
-          <CheckAuth isAuthenticated={isAuthenticated}>
-            <AdminLayout />
-          </CheckAuth>
-        }>
+        <Route
+          path="/admin"
+          element={
+            <CheckAuth isAuthenticated={isAuthenticated}>
+              <AdminLayout />
+            </CheckAuth>
+          }
+        >
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="user" element={<UserPage />} />
           <Route path="menu/all" element={<AdminMenuPage />} />

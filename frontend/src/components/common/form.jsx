@@ -115,7 +115,7 @@ function CommonForm({
           </div>
         ))}
       </div>
-      <Button disabled={isDisable} type="submit" className="mt-5 w-full">
+      <Button disabled={isDisable} type="submit" className="mt-5 w-full cursor-pointer">
         {buttonText || "Submit"}
       </Button>
     </form>
