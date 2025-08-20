@@ -1,5 +1,6 @@
 const userModel = require("../../models/userModel");
 const bcrypt = require("bcryptjs");
+const transporter = require("../../helpers/mailer");
 
 const getAllUser = async (req, res) => {
   try {
@@ -133,4 +134,86 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getAllUser, addNewUser, updateUser, deleteUser };
+const inviteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await userModel.findById(id);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "User not found", success: false });
+    }
+
+    const inviteLink = `http://localhost:5173/reset-password/${user?._id}`;
+
+    await transporter.sendMail({
+      from: '"Admin Team" <ChefOps@myapp.com>',
+      to: user.email,
+      subject: "You're Invited 🎉",
+      html: `
+        <h2>Hello ${user.firstName},</h2>
+        <p>You have been invited to join our platform.</p>
+        <p>Click below to accept your invitation:</p>
+        <a href="${inviteLink}" style="padding:10px 15px; background:#007bff; color:#fff; text-decoration:none; border-radius:5px;">Accept Invite</a>
+      `,
+    });
+
+    res.status(200).json({
+      message: `Invitation email sent to ${user.email}`,
+      success: true,
+      error: false,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error.message || error,
+      success: false,
+      error: true,
+    });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { password } = req.body;
+
+    const user = await userModel.findById(id);
+
+    console.log(user);
+
+    if (!user) {
+      return res.status(400).json({
+        message: "User Not Found",
+        success: false,
+        error: true,
+      });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(password, salt);
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Password Reset Successfully",
+      success: true,
+      error: false,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error.message || error,
+      success: false,
+      error: true,
+    });
+  }
+};
+
+module.exports = {
+  getAllUser,
+  addNewUser,
+  updateUser,
+  deleteUser,
+  inviteUser,
+  resetPassword,
+};

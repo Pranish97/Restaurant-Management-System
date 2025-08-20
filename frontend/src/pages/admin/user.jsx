@@ -14,6 +14,7 @@ import {
   deleteUser,
   editUser,
   getAllUser,
+  inviteUser,
 } from "../../store/admin/user-slice";
 import { toast } from "react-toastify";
 import {
@@ -56,7 +57,7 @@ function UserPage() {
             setFormData(initialData);
             setCurrentEditId(null);
             setOpenAddUserDialog(false);
-            dispatch(getAllUser())
+            dispatch(getAllUser());
           }
         })
       : dispatch(addNewUser(formData)).then((data) => {
@@ -76,6 +77,15 @@ function UserPage() {
       if (data?.payload?.success) {
         toast.success(data?.payload?.message);
         dispatch(getAllUser());
+      }
+    });
+  }
+
+  function handleInviteUser(id) {
+    console.log(id)
+    dispatch(inviteUser(id)).then((data) => {
+      if (data?.payload?.success) {
+        toast.success(data.payload.message);
       }
     });
   }
@@ -125,7 +135,10 @@ function UserPage() {
                         {userItem?.role}
                       </TableCell>
                       <TableCell>
-                        <Button className="bg-blue-700 cursor-pointer hover:bg-blue-600">
+                        <Button
+                          onClick={() => handleInviteUser(userItem?._id)}
+                          className="bg-blue-700 cursor-pointer hover:bg-blue-600"
+                        >
                           Invite
                         </Button>
                       </TableCell>
