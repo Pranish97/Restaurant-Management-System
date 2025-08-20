@@ -43,6 +43,24 @@ export const deleteUser = createAsyncThunk("/admin/deleteUser", async (id) => {
   return response.data;
 });
 
+export const inviteUser = createAsyncThunk("/admin/inviteUser", async (id) => {
+  const response = await axios.post(
+    `http://localhost:5000/api/admin/user/invite/${id}`
+  );
+  return response.data;
+});
+
+export const resetPassword = createAsyncThunk(
+  "/auth/resetPassword",
+  async ({ id, password }) => {
+    const response = await axios.post(
+      `http://localhost:5000/api/admin/user/reset-password/${id}`,
+      { password }
+    );
+    return response.data;
+  }
+);
+
 const userSlice = createSlice({
   name: "adminUser",
   initialState,

@@ -213,3 +213,20 @@ export const addUser = [
     ],
   },
 ];
+
+export const resetPasswordFields = [
+  {
+    name: "password",
+    label: "New Password",
+    placeholder: "Enter your new password",
+    componentType: "input",
+    type: "password",
+  },
+  {
+    name: "confirmPassword",
+    label: "Confirm Password",
+    placeholder: "Re-enter your new password",
+    componentType: "input",
+    type: "password",
+  },
+];

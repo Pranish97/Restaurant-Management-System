@@ -13,15 +13,17 @@ import CheckAuth from "./components/common/checkAuth";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
+import ResetPassword from "./pages/auth/reset-password";
 
 function App() {
-  const { isAuthenticated, isLoading ,user} = useSelector((state) => state.auth);
+  const { isAuthenticated, isLoading } = useSelector(
+    (state) => state.auth
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(checkAuth());
-  }, []);
-
+  }, [dispatch]);
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -40,6 +42,7 @@ function App() {
           <Route path="register" element={<Register />} />
         </Route>
 
+        
         <Route
           path="/admin"
           element={
@@ -54,6 +57,7 @@ function App() {
           <Route path="table" element={<AdminTablePage />} />
           <Route path="staff" element={<AdminStaffPage />} />
         </Route>
+        <Route path="reset-password/:id" element={<ResetPassword />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>
