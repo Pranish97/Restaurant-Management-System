@@ -50,11 +50,10 @@ function AdminMenuPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryFromUrl = searchParams.get("category") || "all";
 
-
   function onSubmit(e) {
     e.preventDefault();
 
-    if (user?.role !== "admin") {
+    if (user?.role !== "admin" && user?.role !== "staff") {
       toast.error("You don't have access");
       return;
     }
@@ -86,7 +85,7 @@ function AdminMenuPage() {
   }
 
   function handleDeleteMenu(id) {
-    if(user?.role !== "admin"){
+    if (user?.role !== "admin" && user?.role !== "staff") {
       toast.error("You don't have access");
       return;
     }
@@ -99,7 +98,7 @@ function AdminMenuPage() {
   }
 
   function handleOpenAddDialog() {
-    if (user?.role !== "admin") {
+    if (user?.role !== "admin" && user?.role !== "staff") {
       toast.error("You don't have access");
       return;
     } else {
@@ -159,12 +158,14 @@ function AdminMenuPage() {
             <h2 className="text-xl font-bold mb-4 capitalize">
               {categoryFromUrl} Menu
             </h2>
-            <Button
-              onClick={handleOpenAddDialog}
-              className="cursor-pointer bg-amber-700 hover:bg-amber-600"
-            >
-              Add New Menu
-            </Button>
+            {user?.role === "admin" || user?.role === "staff" ? (
+              <Button
+                onClick={handleOpenAddDialog}
+                className="cursor-pointer bg-amber-700 hover:bg-amber-600"
+              >
+                Add New Menu
+              </Button>
+            ) : null}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
@@ -195,25 +196,27 @@ function AdminMenuPage() {
                   </div>
                 </CardContent>
 
-                <CardFooter className="flex justify-between gap-3">
-                  <Button
-                    onClick={() => {
-                      handleOpenAddDialog();
-                      setCurrentEditedId(item?._id);
-                      setFormData(item);
-                    }}
-                    className="bg-amber-700 hover:bg-amber-600 cursor-pointer"
-                  >
-                    <Edit /> Edit
-                  </Button>
-                  <Button
-                    onClick={() => handleDeleteMenu(item._id)}
-                    className="bg-red-700 hover:bg-red-600 cursor-pointer"
-                  >
-                    <Trash />
-                    Delete
-                  </Button>
-                </CardFooter>
+                {user?.role === "admin" || user?.role === "staff" ? (
+                  <CardFooter className="flex justify-between gap-3">
+                    <Button
+                      onClick={() => {
+                        handleOpenAddDialog();
+                        setCurrentEditedId(item?._id);
+                        setFormData(item);
+                      }}
+                      className="bg-amber-700 hover:bg-amber-600 cursor-pointer"
+                    >
+                      <Edit /> Edit
+                    </Button>
+                    <Button
+                      onClick={() => handleDeleteMenu(item._id)}
+                      className="bg-red-700 hover:bg-red-600 cursor-pointer"
+                    >
+                      <Trash />
+                      Delete
+                    </Button>
+                  </CardFooter>
+                ) : null}
               </Card>
             ))}
           </div>
