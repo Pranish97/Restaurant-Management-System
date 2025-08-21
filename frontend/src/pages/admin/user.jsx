@@ -165,16 +165,16 @@ function UserPage() {
                     </TableRow>
                   ))
                 ) : (
-                  <div>No Data Found!</div>
+                  <div>You Dont Have Access to this Page!</div>
                 )}
               </TableBody>
             </Table>
           </div>
         </>
       ) : (
-        <TableRow>
-          <TableCell colSpan={9} className="text-center">
-            No Data Found!
+        <TableRow className="text-center">
+          <TableCell colSpan={9} className="flex justify-center text-xl mt-2 font-extrabold">
+            You Dont Have Access to this Page!
           </TableCell>
         </TableRow>
       )}
