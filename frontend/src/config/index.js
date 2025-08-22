@@ -230,3 +230,30 @@ export const resetPasswordFields = [
     type: "password",
   },
 ];
+
+export const addTableFields = [
+  {
+    name: "tableNumber",
+    label: "Table Number",
+    placeholder: "Enter table number",
+    componentType: "input",
+    type: "text",
+  },
+  {
+    name: "seats",
+    label: "Seats",
+    placeholder: "Enter number of seats",
+    componentType: "input",
+    type: "number",
+  },
+  {
+    name: "status",
+    label: "Status",
+    componentType: "select",
+    placeholder: "Status",
+    options: [
+      { id: "available", label: "Available" },
+      { id: "occupied", label: "Occupied" },
+    ],
+  },
+];
