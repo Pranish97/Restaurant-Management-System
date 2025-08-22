@@ -71,7 +71,7 @@ const getAllTable = async (req, res) => {
       data: allTableList,
       success: true,
       message: "All Table List",
-      error: fasle,
+      error: false,
     });
   } catch (error) {
     res.status(400).json({
@@ -95,6 +95,11 @@ const deleteTable = async (req, res) => {
         success: false,
       });
     }
+    res.status(200).json({
+      message: "Table Removed Successfully!",
+      success: true,
+      error: false,
+    });
   } catch (error) {
     res.status(400).json({
       message: error.message || error,
