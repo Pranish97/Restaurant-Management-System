@@ -55,6 +55,16 @@ export const deleteMenu = createAsyncThunk("/admin/deleteMenu", async (id) => {
   return response.data;
 });
 
+export const fetchAllMenu = createAsyncThunk(
+  "/admin/fetchAllMenu",
+  async () => {
+    const response = await axios.get(
+      `http://localhost:5000/api/admin/menu/get`
+    );
+    return response.data;
+  }
+);
+
 const menuSlice = createSlice({
   name: "adminMenu",
   initialState,
@@ -69,6 +79,17 @@ const menuSlice = createSlice({
         state.menuList = action.payload.data;
       })
       .addCase(fetchMenuByCategory.rejected, (state) => {
+        state.isLoading = false;
+        state.menuList = [];
+      })
+      .addCase(fetchAllMenu.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(fetchAllMenu.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.menuList = action.payload.data;
+      })
+      .addCase(fetchAllMenu.rejected, (state) => {
         state.isLoading = false;
         state.menuList = [];
       });

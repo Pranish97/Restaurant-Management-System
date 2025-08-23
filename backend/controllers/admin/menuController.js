@@ -113,6 +113,25 @@ const fetchMenuByCategory = async (req, res) => {
   }
 };
 
+const fetchAllMenu = async (req, res) => {
+  try {
+    const menuList = await menuModel.find();
+
+    res.status(200).json({
+      message: "All Menu",
+      data: menuList,
+      success: true,
+      error: false,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error.message || error,
+      success: false,
+      error: true,
+    });
+  }
+};
+
 const deleteMenu = async (req, res) => {
   try {
     const { id } = req.params;
@@ -146,4 +165,5 @@ module.exports = {
   editMenu,
   fetchMenuByCategory,
   deleteMenu,
+  fetchAllMenu,
 };

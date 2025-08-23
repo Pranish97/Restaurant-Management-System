@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
 import ResetPassword from "./pages/auth/reset-password";
+import AdminTableDetails from "./pages/admin/tableDetails";
 
 function App() {
   const { isAuthenticated, isLoading } = useSelector(
@@ -55,6 +56,7 @@ function App() {
           <Route path="user" element={<UserPage />} />
           <Route path="menu/all" element={<AdminMenuPage />} />
           <Route path="table" element={<AdminTablePage />} />
+          <Route path="table/:id" element={<AdminTableDetails />} />
           <Route path="staff" element={<AdminStaffPage />} />
         </Route>
         <Route path="reset-password/:id" element={<ResetPassword />} />
