@@ -6,6 +6,7 @@ const {
   editMenu,
   deleteMenu,
   fetchMenuByCategory,
+  fetchAllMenu,
 } = require("../../controllers/admin/menuController");
 
 const router = express.Router();
@@ -15,5 +16,6 @@ router.post("/add", addMenu);
 router.put("/update/:id", editMenu);
 router.get("/getByCategory", fetchMenuByCategory);
 router.delete("/delete/:id", deleteMenu);
+router.get("/get", fetchAllMenu);
 
 module.exports = router;
