@@ -32,7 +32,8 @@ function AdminTablePage() {
   const [currentEditId, setCurrentEditId] = useState(null);
   const dispatch = useDispatch();
   const { tableList } = useSelector((state) => state.adminTable);
-  const navigate = useNavigate()
+  const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   function onSubmit(e) {
     e.preventDefault();
@@ -73,6 +74,7 @@ function AdminTablePage() {
 
   return (
     <Fragment>
+     {user?.role === "admin" || user?.role === "staff" ? <>
       <div className="flex justify-between mx-4">
         <div className="ml-4">
           <h1 className="text-2xl font-extrabold">Tables</h1>
@@ -89,44 +91,27 @@ function AdminTablePage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6 mx-20 border ">
         {tableList.map((table) => (
-            <Card key={table._id} onClick={() => navigate(`/admin/table/${table?._id}`)} className="rounded-2xl border border-gray-300 shadow-xl bg-gray-200 hover:scale-105 cursor-pointer hover:bg-gray-300 ">
-              <CardContent className="px-6 py-3 flex flex-col gap-3">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-semibold">
-                    Table {table.tableNumber}
-                  </h2>
-                  <div className="flex gap-2">
-                    <Button
-                      className="bg-amber-700 cursor-pointer hover:bg-amber-600"
-                      onClick={() => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        setCurrentEditId(table._id);
-                        setOpenAddTableDialog(true);
-                        setFormData(table);
-                      }}
-                    >
-                      <Edit className="w-5 h-5 cursor-pointe" />
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        handleDeleteTable(table._id);
-                      }}
-                      className="bg-red-700 cursor-pointer hover:bg-red-600"
-                    >
-                      <Trash2 className="w-5 h-5 cursor-pointer" />
-                    </Button>
-                  </div>
-                </div>
+          <Card
+            key={table._id}
+            className="rounded-2xl border border-gray-300 shadow-xl bg-gray-200 hover:scale-105 cursor-pointer hover:bg-gray-300 "
+          >
+            <CardContent className="px-6 py-3 flex flex-col gap-3">
+              <div
+                className="flex flex-col items-start px-4 gap-5"
+                onClick={() => navigate(`/admin/table/${table?._id}`)}
+              >
+                <h2 className="text-xl font-semibold">
+                  Table {table.tableNumber}
+                </h2>
 
                 <div className="flex items-center gap-2 text-base text-gray-600">
                   <Users className="w-4 h-4" />
                   {table.seats} Seats
                 </div>
+              </div>
 
-                <div>
+              <div className="flex justify-between mt-2">
+                <div className="mb-5">
                   {table.status === "available" ? (
                     <span className="px-3 py-1 rounded-full text-base font-medium bg-green-100 text-green-600">
                       Available
@@ -137,10 +122,35 @@ function AdminTablePage() {
                     </span>
                   )}
                 </div>
-              </CardContent>
-            </Card>
+                <div className="flex gap-3">
+                  <Button
+                    className="bg-amber-700 cursor-pointer hover:bg-amber-600"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      setCurrentEditId(table._id);
+                      setOpenAddTableDialog(true);
+                      setFormData(table);
+                    }}
+                  >
+                    <Edit className="w-5 h-5 cursor-pointe" />
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      handleDeleteTable(table._id);
+                    }}
+                    className="bg-red-700 cursor-pointer hover:bg-red-600"
+                  >
+                    <Trash2 className="w-5 h-5 cursor-pointer" />
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         ))}
-      </div>
+      </div></> : <div className="text-xl text-center font-extrabold">You Dont Have Access to this page!</div>}
 
       <Sheet
         open={openAddTableDialog}

@@ -4,6 +4,7 @@ import axios from "axios";
 const initialState = {
   isLoading: false,
   tableList: [],
+  table: null,
 };
 
 export const addTable = createAsyncThunk(
@@ -51,6 +52,39 @@ export const deleteTable = createAsyncThunk(
   }
 );
 
+export const addMenuToTable = createAsyncThunk(
+  "/admin/addMenuToTable",
+  async ({ menuId, tableId, quantity = 1 }) => {
+    const response = await axios.post(
+      "http://localhost:5000/api/admin/table/add-menu",
+      { menuId, tableId, quantity }
+    );
+    return response.data;
+  }
+);
+export const getTableById = createAsyncThunk(
+  "/admin/getTableById",
+  async (id) => {
+    const response = await axios.get(
+      `http://localhost:5000/api/admin/table/get/${id}`
+    );
+
+    return response.data;
+  }
+);
+
+export const removeMenuFromTable = createAsyncThunk(
+  "/admin/removeMenuFromTable",
+  async ({ tableId, menuId }) => {
+    const response = await axios.post(
+      "http://localhost:5000/api/admin/table/remove-menu",
+      { tableId, menuId }
+    );
+
+    return response.data;
+  }
+);
+
 const tableSlice = createSlice({
   name: "adminTable",
   initialState,
@@ -67,6 +101,17 @@ const tableSlice = createSlice({
       .addCase(getTableList.rejected, (state) => {
         state.isLoading = false;
         state.tableList = [];
+      })
+      .addCase(getTableById.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getTableById.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.table = action.payload.data;
+      })
+      .addCase(getTableById.rejected, (state) => {
+        state.isLoading = false;
+        state.table = null;
       });
   },
 });
