@@ -9,30 +9,64 @@ import {
 } from "../../components/ui/sheet";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllMenu } from "../../store/admin/menu-slice";
-import { Plus, Trash } from "lucide-react";
-import orderImg from "../../assets/order.jpg";
+import { ArrowLeft, Plus, Trash } from "lucide-react";
+import { Link, useParams } from "react-router-dom";
+import {
+  addMenuToTable,
+  getTableById,
+  removeMenuFromTable,
+} from "../../store/admin/table-slice";
+import { toast } from "react-toastify";
 
 function AdminTableDetails() {
   const { menuList } = useSelector((state) => state.adminMenu);
+  const { table } = useSelector((state) => state.adminTable);
   const dispatch = useDispatch();
   const [handleAddMenuDialog, setHandleAddMenuDialog] = useState(false);
+  const { id } = useParams();
 
-  const [orders, setOrders] = useState([
-    { image: orderImg, name: "Crispy Chicken Burger", price: 350 },
-    { image: orderImg, name: "Chicken Momo", price: 250 },
-    { image: orderImg, name: "Chicken Pepperoni Pizza", price: 800 },
-  ]);
 
-  const total = orders.reduce((sum, item) => sum + item.price, 0);
+  const total = table?.menu.reduce((sum, item) => sum + item?.data?.price * item?.quantity, 0);
 
+  function handleAddMenutoTable(menuId, tableId) {
+    {
+      table.status === "occupied"
+        ? dispatch(addMenuToTable({ menuId, tableId })).then((data) => {
+            if (data?.payload?.success) {
+              toast.success(data.payload.message);
+              dispatch(getTableById(tableId));
+              setHandleAddMenuDialog(false)
+            }
+          })
+        : toast.error("Table Should be Occupied First!");
+    }
+  }
+
+  function handleRemoveMenu(tableId, menuId) {
+    dispatch(removeMenuFromTable({ tableId, menuId })).then((data) => {
+      if (data?.payload?.success) {
+        toast.success(data.payload.message);
+        dispatch(getTableById(id));
+      }
+    });
+  }
+
+  console.log(table, "table");
   useEffect(() => {
     dispatch(fetchAllMenu());
+    dispatch(getTableById(id));
   }, [dispatch]);
 
-  console.log(menuList);
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">Table Details</h1>
+      <Link
+        to={"/admin/table"}
+        className="flex gap-1 items-center hover:underline"
+      >
+        <ArrowLeft className="w-5 h-5" />
+        Back
+      </Link>
+      <h1 className="text-2xl font-bold mb-6 mt-2">Table Details</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="lg:col-span-2 rounded-2xl shadow-lg border">
@@ -41,37 +75,51 @@ function AdminTableDetails() {
               <h2 className="text-xl font-semibold">Orders</h2>
               <Button
                 className="bg-amber-700 hover:bg-amber-600 cursor-pointer"
-                onClick={() => setHandleAddMenuDialog(true)}
+                onClick={() => {
+                  setHandleAddMenuDialog(true);
+                }}
               >
                 + Add Item
               </Button>
             </div>
 
             <ul className="divide-y divide-gray-200">
-              {orders.map((item, index) => (
-                <li
-                  key={index}
-                  className="flex items-center justify-between gap-4 py-3 border-b"
-                >
-                  <div className="flex gap-10 items-center">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-16 h-16 object-cover rounded-lg"
-                    />
+              {table && table.menu.length > 0 ? (
+                table?.menu.map((item, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center justify-between gap-4 py-3 border-b"
+                  >
+                    <div className="flex gap-10 items-center">
+                      <img
+                        src={item?.data?.image}
+                        alt={item?.data?.name}
+                        className="w-16 h-16 object-cover rounded-lg"
+                      />
 
-                    <span className="text-xl font-bold">{item.name}</span>
-                  </div>
-                  <div className="flex gap-10">
-                    <Button className="bg-red-700 hover:bg-red-600 cursor-pointer">
-                      <Trash />
-                    </Button>
-                    <span className="text-amber-700 text-lg font-semibold">
-                      Rs. {item.price}
-                    </span>
-                  </div>
-                </li>
-              ))}
+                      <span className="text-xl font-bold">{item?.data?.name}</span>
+                    </div>
+                    <div className="flex gap-10 items-center">
+                      <span className="text-amber-700 text-lg font-semibold">
+                        Quantity: {item?.quantity}
+                      </span>
+                      <Button
+                        onClick={() => {
+                          handleRemoveMenu(id, item._id);
+                        }}
+                        className="bg-red-700 hover:bg-red-600 cursor-pointer"
+                      >
+                        <Trash />
+                      </Button>
+                      <span className="text-amber-700 text-lg font-semibold">
+                        ${item?.quantity * item?.data?.price}
+                      </span>
+                    </div>
+                  </li>
+                ))
+              ) : (
+                <li className="text-lg font-semibold">No Order Found!</li>
+              )}
             </ul>
           </CardContent>
         </Card>
@@ -81,7 +129,7 @@ function AdminTableDetails() {
             <h2 className="text-xl font-semibold mb-4">Summary</h2>
             <div className="flex justify-between text-lg font-medium mb-2">
               <span>Total</span>
-              <span>Rs. {total}</span>
+              <span>${total}</span>
             </div>
             <Button className="w-full mt-4 bg-amber-700 hover:bg-amber-600">
               Checkout
@@ -118,7 +166,12 @@ function AdminTableDetails() {
                   </p>
                 </div>
 
-                <Button className="bg-amber-700 hover:bg-amber-600 text-white px-4 py-2 rounded-lg cursor-pointer">
+                <Button
+                  onClick={() => {
+                    handleAddMenutoTable(menu?._id, id);
+                  }}
+                  className="bg-amber-700 hover:bg-amber-600 text-white px-4 py-2 rounded-lg cursor-pointer"
+                >
                   <Plus /> Add
                 </Button>
               </div>
