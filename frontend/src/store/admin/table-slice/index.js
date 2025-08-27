@@ -64,9 +64,9 @@ export const addMenuToTable = createAsyncThunk(
 );
 export const getTableById = createAsyncThunk(
   "/admin/getTableById",
-  async (id) => {
+  async (tableId) => {
     const response = await axios.get(
-      `http://localhost:5000/api/admin/table/get/${id}`
+      `http://localhost:5000/api/admin/table/get/${tableId}`
     );
 
     return response.data;
