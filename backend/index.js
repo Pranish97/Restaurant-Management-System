@@ -7,6 +7,7 @@ const adminMenuRouter = require("./routes/admin/menu-routes");
 const adminUserRouter = require("./routes/admin/user-routes");
 const adminStaffRouter = require("./routes/admin/staff-routes");
 const adminTableRouter = require("./routes/admin/table-routes");
+const adminPaymentRouter = require("./routes/admin/payment-routes");
 
 mongoose
   .connect("mongodb+srv://pranishstha4:Pranish123@rms.otc8usw.mongodb.net/")
@@ -38,5 +39,6 @@ app.use("/api/admin/menu", adminMenuRouter);
 app.use("/api/admin/user", adminUserRouter);
 app.use("/api/admin/staff", adminStaffRouter);
 app.use("/api/admin/table", adminTableRouter);
+app.use("/api/admin/payment", adminPaymentRouter);
 
 app.listen(PORT, () => console.log("Server Is Running"));

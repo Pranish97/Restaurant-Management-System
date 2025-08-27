@@ -1,4 +1,3 @@
-const menuModel = require("../../models/menuModel");
 const tableModel = require("../../models/tableModel");
 
 const addTable = async (req, res) => {

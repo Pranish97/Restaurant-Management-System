@@ -10,7 +10,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllMenu } from "../../store/admin/menu-slice";
 import { ArrowLeft, Plus, Trash } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   addMenuToTable,
   getTableById,
@@ -24,6 +24,7 @@ function AdminTableDetails() {
   const dispatch = useDispatch();
   const [handleAddMenuDialog, setHandleAddMenuDialog] = useState(false);
   const { id } = useParams();
+  const navigate = useNavigate()
 
 
   const total = table?.menu.reduce((sum, item) => sum + item?.data?.price * item?.quantity, 0);
@@ -131,7 +132,9 @@ function AdminTableDetails() {
               <span>Total</span>
               <span>${total}</span>
             </div>
-            <Button className="w-full mt-4 bg-amber-700 hover:bg-amber-600">
+            <Button onClick= {() => {
+              navigate(`/payment/${table._id}`)
+            }} className="w-full mt-4 bg-amber-700 hover:bg-amber-600">
               Checkout
             </Button>
           </CardContent>

@@ -15,11 +15,12 @@ import { useEffect } from "react";
 import { checkAuth } from "./store/auth-slice";
 import ResetPassword from "./pages/auth/reset-password";
 import AdminTableDetails from "./pages/admin/tableDetails";
+import PaymentComponent from "./components/admin/payement";
+import Success from "./components/admin/success";
+import Failure from "./components/admin/failure";
 
 function App() {
-  const { isAuthenticated, isLoading } = useSelector(
-    (state) => state.auth
-  );
+  const { isAuthenticated, isLoading } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -43,7 +44,6 @@ function App() {
           <Route path="register" element={<Register />} />
         </Route>
 
-        
         <Route
           path="/admin"
           element={
@@ -59,6 +59,11 @@ function App() {
           <Route path="table/:id" element={<AdminTableDetails />} />
           <Route path="staff" element={<AdminStaffPage />} />
         </Route>
+
+        <Route path="/payment/:tableId" element={<PaymentComponent />} />
+        <Route path="/payment-success" element={<Success />} />
+        <Route path="/payment-failure" element={<Failure />} />
+
         <Route path="reset-password/:id" element={<ResetPassword />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>

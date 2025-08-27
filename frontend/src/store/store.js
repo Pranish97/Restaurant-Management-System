@@ -4,6 +4,7 @@ import adminMenuSlice from "./admin/menu-slice";
 import adminUserSlce from "./admin/user-slice";
 import adminStaffSlice from "./admin/staff-slice";
 import adminTableSlice from "./admin/table-slice";
+import adminPaymentSlice from "./admin/payment-slice";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     adminUser: adminUserSlce,
     adminStaff: adminStaffSlice,
     adminTable: adminTableSlice,
+    adminPayment: adminPaymentSlice,
   },
 });
 
