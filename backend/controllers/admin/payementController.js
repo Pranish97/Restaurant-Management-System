@@ -4,13 +4,21 @@ const { v4: uuidv4 } = require("uuid");
 const tableModel = require("../../models/tableModel");
 
 const EsewaInitiatePayment = async (req, res) => {
-  const { amount, tableId } = req.body;
+  const { amount, tableId, customerName, customerNumber, customerAddress } =
+    req.body;
 
   try {
-    if (!amount || !tableId) {
-      return res
-        .status(400)
-        .json({ message: "Amount and tableId are required" });
+    if (
+      !amount ||
+      !tableId ||
+      !customerName ||
+      !customerAddress ||
+      !customerNumber
+    ) {
+      return res.status(400).json({
+        message:
+          "Amount, tableId, customerName,customerNumber and customerAddress are required",
+      });
     }
 
     const transactionUuid = uuidv4();
@@ -36,6 +44,9 @@ const EsewaInitiatePayment = async (req, res) => {
         table: tableId,
         amount: amount,
         transaction_uuid: transactionUuid,
+        customerName,
+        customerNumber,
+        customerAddress,
       });
       await transaction.save();
 
@@ -91,4 +102,23 @@ const paymentStatus = async (req, res) => {
   }
 };
 
-module.exports = { EsewaInitiatePayment, paymentStatus };
+const getAllTransaction = async (req, res) => {
+  try {
+    const allTransaction = await transactionModel.find({});
+
+    res.status(200).json({
+      message: "All Transaction",
+      data: allTransaction,
+      success: true,
+      error: false,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error.message || error,
+      success: false,
+      error: true,
+    });
+  }
+};
+
+module.exports = { EsewaInitiatePayment, paymentStatus, getAllTransaction };
