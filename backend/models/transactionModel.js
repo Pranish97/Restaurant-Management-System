@@ -23,6 +23,9 @@ const transactionSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    customerName: { type: String, required: true },
+    customerNumber: { type: String, required: true },
+    customerAddress: { type: String, required: true },
   },
   { timestamps: true }
 );

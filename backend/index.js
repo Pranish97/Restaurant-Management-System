@@ -8,6 +8,7 @@ const adminUserRouter = require("./routes/admin/user-routes");
 const adminStaffRouter = require("./routes/admin/staff-routes");
 const adminTableRouter = require("./routes/admin/table-routes");
 const adminPaymentRouter = require("./routes/admin/payment-routes");
+require("dotenv").config();
 
 mongoose
   .connect("mongodb+srv://pranishstha4:Pranish123@rms.otc8usw.mongodb.net/")
