@@ -121,4 +121,37 @@ const getAllTransaction = async (req, res) => {
   }
 };
 
-module.exports = { EsewaInitiatePayment, paymentStatus, getAllTransaction };
+const deleteTransaction = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deleteTransaction = await transactionModel.findByIdAndDelete(id);
+
+    if (!deleteTransaction) {
+      res.status(400).json({
+        message: "Transaction not Found!",
+        success: true,
+        error: false,
+      });
+    }
+
+    res.status(200).json({
+      message: "Transaction Deleted Successfully!",
+      success: true,
+      error: false,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error.message || error,
+      success: false,
+      error: true,
+    });
+  }
+};
+
+module.exports = {
+  EsewaInitiatePayment,
+  paymentStatus,
+  getAllTransaction,
+  deleteTransaction,
+};
