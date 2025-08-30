@@ -17,7 +17,7 @@ import {
   updateTable,
 } from "../../store/admin/table-slice";
 import { toast } from "react-toastify";
-import { Edit, Link, Trash2, Users } from "lucide-react";
+import { Edit, Trash2, Users } from "lucide-react";
 import { useNavigate } from "react-router";
 
 const initialData = {

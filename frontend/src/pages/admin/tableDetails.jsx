@@ -52,7 +52,6 @@ function AdminTableDetails() {
     });
   }
 
-  console.log(table, "table");
   useEffect(() => {
     dispatch(fetchAllMenu());
     dispatch(getTableById(id));

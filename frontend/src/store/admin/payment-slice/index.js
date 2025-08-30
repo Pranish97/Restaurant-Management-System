@@ -44,6 +44,17 @@ export const getAllTransaction = createAsyncThunk(
   }
 );
 
+export const deleteTransaction = createAsyncThunk(
+  "/admin/deleteTransaction",
+  async (id) => {
+    const response = await axios.delete(
+      `http://localhost:5000/api/admin/payment/delete/${id}`
+    );
+
+    return response.data;
+  }
+);
+
 const paymentSlice = createSlice({
   name: "adminPayment",
   initialState,

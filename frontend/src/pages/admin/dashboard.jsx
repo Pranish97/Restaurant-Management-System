@@ -2,10 +2,21 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllMenu } from "../../store/admin/menu-slice";
 import { getAllStaff } from "../../store/admin/staff-slice";
-import { DollarSign, ShoppingCart, FileText, Users, Edit, Trash } from "lucide-react";
-import { getAllTransaction } from "../../store/admin/payment-slice";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../components/ui/table";
+import { DollarSign, ShoppingCart, FileText, Users, Trash } from "lucide-react";
+import {
+  deleteTransaction,
+  getAllTransaction,
+} from "../../store/admin/payment-slice";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../../components/ui/table";
 import { Button } from "../../components/ui/button";
+import { toast } from "react-toastify";
 
 function AdminDashboard() {
   const { menuList } = useSelector((state) => state.adminMenu);
@@ -13,21 +24,21 @@ function AdminDashboard() {
   const { transactionList } = useSelector((state) => state.adminPayment);
   const dispatch = useDispatch();
 
-  console.log(transactionList, "tran")
+  console.log(transactionList, "tran");
 
-  const total = transactionList?.reduce((sum, item) => sum + item?.amount , 0);
-  console.log(total, "total")
+  const total = transactionList?.reduce((sum, item) => sum + item?.amount, 0);
+  console.log(total, "total");
   const stats = [
     {
       title: "Total Revenue",
-      value:   `${total}`,
+      value: `${total}`,
       icon: <DollarSign className="w-6 h-6 text-green-600" />,
     },
     {
       title: "Total Transaction",
       value: transactionList?.length,
       icon: <FileText className="w-6 h-6 text-blue-600" />,
-    }, 
+    },
     {
       title: "Total Menu",
       value: menuList?.length || 0,
@@ -40,7 +51,15 @@ function AdminDashboard() {
     },
   ];
 
-  console.log(menuList, "menu");
+  function handleDelete(id) {
+    dispatch(deleteTransaction(id)).then((data) => {
+      console.log(data);
+      if(data?.payload?.success){
+        toast.success(data.payload.message)
+        dispatch(getAllTransaction())
+      }
+    });
+  }
 
   useEffect(() => {
     dispatch(fetchAllMenu());
@@ -70,54 +89,60 @@ function AdminDashboard() {
       <div className="flex flex-col gap-4 mt-5">
         <h1 className="font-bold ml-15 text-xl">Transaction Details</h1>
         <div className="flex px-10 mt-5">
-            <Table>
-              <TableHeader>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">SNO</TableHead>
+                <TableHead>Customer Name</TableHead>
+                <TableHead>Customer Number</TableHead>
+                <TableHead>Customer Address</TableHead>
+                <TableHead>Amount</TableHead>
+                <TableHead>Transaction Date</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-center">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {transactionList && transactionList.length > 0 ? (
+                transactionList.map((transaction, index) => (
+                  <TableRow key={transaction?._id}>
+                    <TableCell className="font-medium">{index + 1}</TableCell>
+                    <TableCell>{transaction?.customerName}</TableCell>
+                    <TableCell>{transaction?.customerNumber}</TableCell>
+                    <TableCell>{transaction?.customerAddress}</TableCell>
+                    <TableCell>${transaction?.amount}</TableCell>
+                    <TableCell>
+                      {transaction?.createdAt.split("T")[0]}
+                    </TableCell>
+                    <TableCell className="capitalize">
+                      {transaction?.status}
+                    </TableCell>
+                    <TableCell className="flex gap-3 items-center justify-center">
+                      <Button
+                        onClick={() => {
+                          handleDelete(transaction?._id);
+                        }}
+                        className="bg-red-700 cursor-pointer hover:bg-red-600"
+                      >
+                        <Trash />
+                        Delete
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
                 <TableRow>
-                  <TableHead className="w-[100px]">SNO</TableHead>
-                  <TableHead>Customer Name</TableHead>
-                  <TableHead>Customer Number</TableHead>
-                  <TableHead>Customer Address</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Transaction Date</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-center">Actions</TableHead>
+                  <TableCell
+                    colSpan={8}
+                    className="text-center text-xl font-bold py-6"
+                  >
+                    No Data Found!
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {transactionList && transactionList.length > 0 ? (
-                  transactionList.map((transaction, index) => (
-                    <TableRow key={transaction?._id}>
-                      <TableCell className="font-medium">{index + 1}</TableCell>
-                      <TableCell>{transaction?.customerName}</TableCell>
-                      <TableCell>{transaction?.customerNumber}</TableCell>
-                      <TableCell>{transaction?.customerAddress}</TableCell>
-                      <TableCell>${transaction?.amount}</TableCell>
-                      <TableCell>{transaction?.created_at}</TableCell>
-                      <TableCell className="capitalize">
-                        {transaction?.status}
-                      </TableCell>
-                      <TableCell className="flex gap-3 items-center justify-center">
-                        <Button
-                          className="bg-amber-700 cursor-pointer hover:bg-amber-600"
-                        >
-                          <Edit />
-                          Edit
-                        </Button>
-                        <Button
-                          className="bg-red-700 cursor-pointer hover:bg-red-600"
-                        >
-                          <Trash />
-                          Delete
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <div>You Dont Have Access to this Page!</div>
-                )}
-              </TableBody>
-            </Table>
-          </div>
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </>
   );

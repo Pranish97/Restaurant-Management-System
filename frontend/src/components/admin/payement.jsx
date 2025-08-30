@@ -1,15 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { esewaInitiatePayment } from "../../store/admin/payment-slice";
+import { getTableById } from "../../store/admin/table-slice";
 
 const PaymentComponent = () => {
+  const { table } = useSelector((state) => state.adminTable);
   const { tableId } = useParams();
-  const [amount, setAmount] = useState("");
   const [customerName, setCustomerName] = useState("");
   const [customerNumber, setCustomerNumber] = useState("");
   const [customerAddress, setCustomerAddress] = useState("");
-
   const dispatch = useDispatch();
 
   const handlePayment = async (e) => {
@@ -25,6 +25,15 @@ const PaymentComponent = () => {
     }
   };
 
+  console.log(table, "table")
+
+const amount = table?.menu.reduce((sum, item) => sum + item?.data?.price * item?.quantity, 0);
+console.log(amount)
+
+  useEffect(() => {
+    getTableById(tableId)
+  },[dispatch])
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8">
@@ -37,14 +46,14 @@ const PaymentComponent = () => {
               htmlFor="amount"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              Amount (Rs)
+              Amount ($)
             </label>
             <input
               id="amount"
               type="number"
               value={amount}
-              onChange={(e) => setAmount(e.target.value)}
               required
+              readOnly
               placeholder="Enter amount"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
             />
